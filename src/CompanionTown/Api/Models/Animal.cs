@@ -12,6 +12,8 @@ namespace Api.Models
             this.CreateDate = DateTime.Now;
         }
 
+        public int Id { get; set; }
+
         public int Hapiness { get; set; }
 
         public int Hungry { get; set; }
@@ -19,8 +21,6 @@ namespace Api.Models
         public int DefaultHappy { get; }
 
         public int DefaultHungry { get; }
-
-        public int Id { get; set; }
 
         public int PersonId { get; set; }
 

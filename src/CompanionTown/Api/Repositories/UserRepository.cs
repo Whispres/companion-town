@@ -1,27 +1,30 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Api.Models;
-using MongoDB.Driver;
+using Api.Options;
+using Microsoft.Extensions.Options;
+using Serilog;
 
 namespace Api.Repositories
 {
     public class UserRepository : BaseRepository<User>
     {
-        // hack : magic string to be removed to config !?!?!
-        public UserRepository(IMongoDatabase mongoDatabase) : base(mongoDatabase, "Users")
+        public UserRepository(IOptions<DatabaseOptions> databaseOptions) :
+            base(databaseOptions.Value.CompanionTownConnectionString, databaseOptions.Value.UsersCollection)
         {
         }
 
-        public async Task<bool> InsertAsync(User user)
+        public bool Insert(User user)
         {
             try
             {
-                await this.GetCollection().InsertOneAsync(user).ConfigureAwait(false);
+                this.Database.Insert(user);
 
                 return true;
             }
             catch (Exception ex)
             {
+                Log.Error(ex, $"On {nameof(Insert)}");
+
                 return false;
             }
         }
