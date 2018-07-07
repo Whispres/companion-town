@@ -1,6 +1,6 @@
 ﻿using LiteDB;
 
-namespace Api.Repositories
+namespace Api.Repositories.Implementation
 {
     public abstract class BaseRepository<T>
     {

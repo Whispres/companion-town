@@ -1,4 +1,8 @@
 ﻿using Api.Options;
+using Api.Repositories;
+using Api.Repositories.Implementation;
+using Api.Services;
+using Api.Services.Implementation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +32,10 @@ namespace Api
             services.AddOptions();
 
             services.Configure<DatabaseOptions>(Configuration.GetSection("Database"));
+
+            services.AddSingleton<IUserRepository, UserRepository>();
+
+            services.AddTransient<IUserService, UserService>();
 
             services.AddSwaggerGen(c =>
             {
