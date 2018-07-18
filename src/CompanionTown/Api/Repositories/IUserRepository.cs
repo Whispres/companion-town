@@ -1,4 +1,5 @@
-﻿using Api.Models;
+﻿using System.Threading.Tasks;
+using Api.Models;
 
 namespace Api.Repositories
 {
@@ -6,7 +7,7 @@ namespace Api.Repositories
     {
         bool Insert(User user);
 
-        User Get(string name);
+        Task<User> Get(string name);
 
         PagedResult<User> GetPaged(int skip, int limit);
     }

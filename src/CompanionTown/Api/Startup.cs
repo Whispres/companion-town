@@ -3,6 +3,8 @@ using Api.Repositories;
 using Api.Repositories.Implementation;
 using Api.Services;
 using Api.Services.Implementation;
+using Hangfire;
+using Hangfire.LiteDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +39,8 @@ namespace Api
 
             services.AddTransient<IUserService, UserService>();
 
+            services.AddHangfire(t => t.UseLiteDbStorage("hangfire.db"));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = SwaggerApiTitle, Version = "v1" });
@@ -63,6 +67,10 @@ namespace Api
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", SwaggerApiTitle);
             });
+
+            app.UseHangfireServer();
+
+            app.UseHangfireDashboard();
 
             //app.UseHttpsRedirection();
             app.UseMvc();

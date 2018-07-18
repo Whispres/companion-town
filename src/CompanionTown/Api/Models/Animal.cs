@@ -14,23 +14,20 @@ namespace Api.Models
 
         public int Id { get; set; }
 
+        public string Name { get; set; }
+
         public int Hapiness { get; set; }
 
         public int Hungry { get; set; }
 
         public int DefaultHappy { get; }
 
-        public int DefaultHungry { get; }
+        public int DefaultHungry { get; } //  todo : check if is start or the increment
 
         public int PersonId { get; set; }
 
         public DateTime CreateDate { get; }
 
-        /*- id : int
-- typeof: int
-- hapiness : int
-- hungry : int
-- default happy : int
-- default hungry : int*/
+        public bool Alive { get; set; } = true;
     }
 }

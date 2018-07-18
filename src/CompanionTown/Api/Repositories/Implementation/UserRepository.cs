@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Api.Models;
 using Api.Options;
 using Microsoft.Extensions.Options;
@@ -14,11 +15,11 @@ namespace Api.Repositories.Implementation
         {
         }
 
-        public User Get(string name)
+        public Task<User> Get(string name)
         {
             try
             {
-                return this.Database.Find(_ => _.Name == name).FirstOrDefault();
+                return Task.Run(() => this.Database.Find(_ => _.Name == name).FirstOrDefault());
             }
             catch (Exception ex)
             {

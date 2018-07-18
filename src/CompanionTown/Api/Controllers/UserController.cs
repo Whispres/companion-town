@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Api.Models;
 using Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +17,23 @@ namespace Api.Controllers
             this._userService = userService;
         }
 
+        // GET api/user
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(PagedResult<User>), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        public async Task<ActionResult> GetAsync([FromRoute] string id)
+        {
+            try
+            {
+                return this.Ok(await _userService.GetAsync(id));
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
 
-        // POST api/user
+        // GET api/user
         [HttpGet]
         [ProducesResponseType(typeof(PagedResult<User>), 200)]
         [ProducesResponseType(typeof(string), 400)]
@@ -46,7 +62,7 @@ namespace Api.Controllers
                     this.BadRequest("Invalid");
                 }
 
-                return this.Created($"/{user.Name}",_userService.CreateUser(user));
+                return this.Created($"/{user.Name}", _userService.CreateUser(user));
             }
             catch (Exception ex)
             {

@@ -5,5 +5,7 @@
         public string CompanionTownConnectionString { get; set; }
 
         public string UsersCollection { get; set; }
+
+        public string AnimalsCollection { get; set; }
     }
 }
