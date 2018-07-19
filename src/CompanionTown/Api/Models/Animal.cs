@@ -2,31 +2,41 @@
 
 namespace Api.Models
 {
-    // hack : if I know the types of animals I can transform this into a abstract class
     public class Animal
     {
-        public Animal(int defaultHappy = 1, int defaultHungry = 1)
+        public Animal()
+        {
+        }
+
+        public Animal(string name, string user, AnimalType animalType, int defaultHappy = 1, int defaultHungry = 1)
         {
             this.DefaultHappy = defaultHappy;
             this.DefaultHungry = defaultHungry;
+            this.Type = animalType;
+
             this.CreateDate = DateTime.Now;
+            this.Id = Guid.NewGuid();
         }
 
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
 
-        public int Hapiness { get; set; }
+        public int Hapiness { get; set; } = 100;
 
         public int Hungry { get; set; }
 
         public int DefaultHappy { get; }
 
-        public int DefaultHungry { get; } //  todo : check if is start or the increment
+        public int DefaultHungry { get; }
 
-        public int PersonId { get; set; }
+        public string User { get; set; }
 
         public DateTime CreateDate { get; }
+
+        public DateTime LastUpdate { get; set; }
+
+        public AnimalType Type { get; set; }
 
         public bool Alive { get; set; } = true;
     }

@@ -5,7 +5,7 @@ namespace Api.Services
 {
     public interface IUserService
     {
-        User CreateUser(User user);
+        Task<User> CreateUserAsync(User user);
 
         PagedResult<User> GetPaged(int page, int limit);
 

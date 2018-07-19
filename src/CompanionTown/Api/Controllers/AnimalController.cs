@@ -1,5 +1,7 @@
 ﻿using System;
+using Api.Exceptions;
 using Api.Models;
+using Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -8,21 +10,48 @@ namespace Api.Controllers
     [ApiController]
     public class AnimalController : ControllerBase
     {
-        // http://hamidmosalla.com/2018/04/14/asp-net-core-api-patch-method-without-using-jsonpatchdocument/
+        private readonly IAnimalService _animalService;
+
+        public AnimalController(IAnimalService animalService)
+        {
+            this._animalService = animalService;
+        }
+
         // POST api/user
         [HttpPost]
-        [ProducesResponseType(typeof(Animal), 201)]
+        [ProducesResponseType(typeof(AnimalViewModel), 201)]
+        [ProducesResponseType(typeof(string), 304)]
         [ProducesResponseType(typeof(string), 400)]
-        public ActionResult Post([FromRoute] string user, [FromBody] Animal animal)
+        [ProducesResponseType(typeof(string), 404)]
+        public ActionResult Post([FromRoute] string user, [FromBody] AnimalViewModel animal)
         {
             try
             {
-                if (!ModelState.IsValid)
+                if (string.IsNullOrWhiteSpace(user))
                 {
-                    this.BadRequest("Invalid");
+                    return this.BadRequest("Invalid user");
                 }
 
+                if (!ModelState.IsValid)
+                {
+                    return this.BadRequest("Invalid");
+                }
+
+                this._animalService.CreateAnimalAsync(animal, user);
+
                 return this.Created($"/{animal.Name}", animal);
+            }
+            catch (BadRequestException ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+            catch (NotFoundException ex)
+            {
+                return this.NotFound(ex.Message);
+            }
+            catch (NotModifiedException ex)
+            {
+                return this.StatusCode(304, ex.Message);
             }
             catch (Exception ex)
             {
@@ -30,17 +59,11 @@ namespace Api.Controllers
             }
         }
 
+        // http://hamidmosalla.com/2018/04/14/asp-net-core-api-patch-method-without-using-jsonpatchdocument/
         [HttpPatch("{id}", Name = "PatchAnimal")]
-        public IActionResult PatchBook([FromRoute]string user, [FromRoute]string id, [FromBody] PatchDto patchDtos)
+        public IActionResult PatchBook([FromRoute]string user, [FromRoute]string id, [FromBody] AnimalPatch animalPatch)
         {
             return NoContent();
         }
-    }
-
-    public class PatchDto
-    {
-        public string PropertyName { get; set; }
-
-        public int PropertyValue { get; set; }
     }
 }

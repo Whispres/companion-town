@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Api.Exceptions;
 using Api.Models;
 using Api.Repositories;
 
@@ -13,15 +14,17 @@ namespace Api.Services.Implementation
             this._userRepository = userRepository;
         }
 
-        public User CreateUser(User user)
+        public async Task<User> CreateUserAsync(User user)
         {
-            if (_userRepository.Get(user.Name) != null)
+            var existentUser = await this._userRepository.GetAsync(user.Name);
+
+            if (existentUser != null)
             {
-                return null;
+                throw new NotModifiedException("Already exists");
             }
             else
             {
-                _userRepository.Insert(user);
+                await _userRepository.InsertAsync(user);
             }
 
             return user;
@@ -34,7 +37,7 @@ namespace Api.Services.Implementation
 
         public async Task<User> GetAsync(string id)
         {
-            return await this._userRepository.Get(id);
+            return await this._userRepository.GetAsync(id);
         }
     }
 }

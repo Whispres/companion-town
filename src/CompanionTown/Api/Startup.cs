@@ -35,9 +35,14 @@ namespace Api
 
             services.Configure<DatabaseOptions>(Configuration.GetSection("Database"));
 
+            services.Configure<AnimalJobOptions>(Configuration.GetSection("RecurringJob"));
+
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IAnimalRepository, AnimalRepository>();
 
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IAnimalService, AnimalService>();
+            services.AddTransient<IAnimalManagementService, AnimalManagementService>();
 
             services.AddHangfire(t => t.UseLiteDbStorage("hangfire.db"));
 
@@ -72,7 +77,6 @@ namespace Api
 
             app.UseHangfireDashboard();
 
-            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

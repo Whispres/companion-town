@@ -5,9 +5,9 @@ namespace Api.Repositories
 {
     public interface IUserRepository
     {
-        bool Insert(User user);
+        Task<bool> InsertAsync(User user);
 
-        Task<User> Get(string name);
+        Task<User> GetAsync(string name);
 
         PagedResult<User> GetPaged(int skip, int limit);
     }

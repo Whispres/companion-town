@@ -1,16 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Api.Models;
 
 namespace Api.Repositories
 {
     public interface IAnimalRepository
     {
-        Task<bool> Insert(Animal animal);
+        Task<bool> InsertAsync(Animal animal);
 
-        Task<bool> Update(Animal animal);
+        Task<bool> UpdateAsync(Animal animal);
 
-        Task<Animal> Get(string name);
+        Task<Animal> GetAsync(Guid id);
 
-        Task<PagedResult<Animal>> GetPaged(int skip, int limit);
+        Task<List<Animal>> GetAsync(string user);
     }
 }

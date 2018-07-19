@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Api.Exceptions;
 using Api.Models;
 using Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -19,13 +20,21 @@ namespace Api.Controllers
 
         // GET api/user
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(PagedResult<User>), 200)]
+        [ProducesResponseType(typeof(User), 200)]
         [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult> GetAsync([FromRoute] string id)
         {
             try
             {
-                return this.Ok(await _userService.GetAsync(id));
+                var user = await _userService.GetAsync(id);
+
+                if (user == null)
+                {
+                    return this.NotFound();
+                }
+
+                return this.Ok(user);
             }
             catch (Exception ex)
             {
@@ -53,16 +62,22 @@ namespace Api.Controllers
         [HttpPost]
         [ProducesResponseType(typeof(User), 201)]
         [ProducesResponseType(typeof(string), 400)]
-        public ActionResult Post([FromBody] User user)
+        public async Task<ActionResult> PostAsync([FromBody] User user)
         {
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    this.BadRequest("Invalid");
+                    return this.BadRequest("Invalid");
                 }
 
-                return this.Created($"/{user.Name}", _userService.CreateUser(user));
+                var theUser = await _userService.CreateUserAsync(user);
+
+                return this.Created($"/{user.Identifier}", theUser.Name);
+            }
+            catch (NotModifiedException ex)
+            {
+                return this.StatusCode(304, ex.Message);
             }
             catch (Exception ex)
             {

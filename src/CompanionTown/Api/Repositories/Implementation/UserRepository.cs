@@ -15,15 +15,15 @@ namespace Api.Repositories.Implementation
         {
         }
 
-        public Task<User> Get(string name)
+        public Task<User> GetAsync(string name)
         {
             try
             {
-                return Task.Run(() => this.Database.Find(_ => _.Name == name).FirstOrDefault());
+                return Task.Run(() => this.Database.Find(_ => _.Identifier == name).FirstOrDefault());
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"On {nameof(Get)}");
+                Log.Error(ex, $"On {nameof(GetAsync)}");
 
                 return null;
             }
@@ -56,22 +56,6 @@ namespace Api.Repositories.Implementation
             return result;
         }
 
-        public bool Insert(User user)
-        {
-            try
-            {
-                this.Database.Insert(user);
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, $"On {nameof(Insert)}");
-
-                return false;
-            }
-        }
-
         public int Count()
         {
             try
@@ -83,6 +67,22 @@ namespace Api.Repositories.Implementation
                 Log.Error(ex, $"On {nameof(Count)}");
 
                 return 0;
+            }
+        }
+
+        public Task<bool> InsertAsync(User user)
+        {
+            try
+            {
+                this.Database.Insert(user);
+
+                return Task.Run(() => true);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"On {nameof(InsertAsync)}");
+
+                return Task.Run(() => false);
             }
         }
     }

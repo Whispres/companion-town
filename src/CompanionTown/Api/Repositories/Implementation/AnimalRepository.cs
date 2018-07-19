@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Api.Models;
@@ -14,27 +15,42 @@ namespace Api.Repositories.Implementation
             base(databaseOptions.Value.CompanionTownConnectionString, databaseOptions.Value.AnimalsCollection)
         {
         }
-
-        public Task<Animal> Get(string name)
+        
+        public Task<List<Animal>> GetAsync(string user)
         {
+            var result = new List<Animal>();
+
             try
             {
-                return Task.Run(() => this.Database.Find(_ => _.Name == name).FirstOrDefault());
+                result = this.Database.Find(_ => _.User == user).ToList();
+
+                return Task.Run(() => result);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"On {nameof(Get)}");
+                Log.Error(ex, $"On {nameof(GetAsync)} list");
+
+                return Task.Run(() => result);
+            }
+        }
+
+        public Task<Animal> GetAsync(Guid id)
+        {
+            try
+            {
+                var result = this.Database.Find(_ => _.Id == id).FirstOrDefault();
+
+                return Task.Run(() => result);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"On {nameof(InsertAsync)}");
 
                 return null;
             }
         }
 
-        public Task<PagedResult<Animal>> GetPaged(int skip, int limit)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> Insert(Animal animal)
+        public Task<bool> InsertAsync(Animal animal)
         {
             try
             {
@@ -44,23 +60,25 @@ namespace Api.Repositories.Implementation
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"On {nameof(Insert)}");
+                Log.Error(ex, $"On {nameof(InsertAsync)}");
 
                 return Task.Run(() => false);
             }
         }
 
-        public Task<bool> Update(Animal animal)
+        public Task<bool> UpdateAsync(Animal animal)
         {
             try
             {
+                animal.LastUpdate = DateTime.Now;
+
                 this.Database.Update(animal);
 
                 return Task.Run(() => true);
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"On {nameof(Insert)}");
+                Log.Error(ex, $"On {nameof(InsertAsync)}");
 
                 return Task.Run(() => false);
             }
