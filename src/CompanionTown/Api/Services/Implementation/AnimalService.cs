@@ -14,9 +14,9 @@ namespace Api.Services.Implementation
     public class AnimalService : IAnimalService
     {
         private readonly AnimalJobOptions _animalJobOptions;
+        private readonly IAnimalManagementService _animalManagementService;
         private readonly IAnimalRepository _animalRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IAnimalManagementService _animalManagementService;
 
         public AnimalService(
             IOptions<AnimalJobOptions> animalJobOptions,
@@ -59,15 +59,7 @@ namespace Api.Services.Implementation
 
                 if (isSaved)
                 {
-                    RecurringJob.AddOrUpdate<IAnimalManagementService>(
-                        $"HAPINESS-{animal.Id.ToString()}",
-                        _ => _.HapinessDecreaseAsync(animal.Id),
-                        Cron.MinuteInterval(_animalJobOptions.MinutesForHapiness));
-
-                    RecurringJob.AddOrUpdate<IAnimalManagementService>(
-                        $"HUNGRY-{animal.Id.ToString()}",
-                        _ => _.HungryIncreaseAsync(animal.Id),
-                        Cron.MinuteInterval(_animalJobOptions.MinutesForHungry));
+                    AddToJobs(animal);
                 }
                 else
                 {
@@ -161,6 +153,19 @@ namespace Api.Services.Implementation
                 default:
                     return new Animal();
             }
+        }
+
+        private void AddToJobs(Animal animal)
+        {
+            RecurringJob.AddOrUpdate<IAnimalManagementService>(
+                $"HAPINESS-{animal.Id.ToString()}",
+                _ => _.HapinessDecreaseAsync(animal.Id),
+                Cron.MinuteInterval(_animalJobOptions.MinutesForHapiness));
+
+            RecurringJob.AddOrUpdate<IAnimalManagementService>(
+                $"HUNGRY-{animal.Id.ToString()}",
+                _ => _.HungryIncreaseAsync(animal.Id),
+                Cron.MinuteInterval(_animalJobOptions.MinutesForHungry));
         }
     }
 }
