@@ -4,6 +4,7 @@ HTTP API which could be used to power a simple virtual pet style game
 ### Architecture options 
 * Use of [LiteDB](http://www.litedb.org/) in order to remove external dependencies
 * Repository pattern in order to easily change to other db engine
+* Small factory pattern to create `Animal`'s
 * async implementation (LiteDb not compatible)
 
 ### Future Improvements
