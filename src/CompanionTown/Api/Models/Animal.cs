@@ -29,13 +29,13 @@ namespace Api.Models
 
         public int Hungry { get; set; }
 
-        public int DefaultHappy { get; }
+        public int DefaultHappy { get; private set; }
 
-        public int DefaultHungry { get; }
+        public int DefaultHungry { get; private set; }
 
         public string User { get; set; }
 
-        public DateTime CreateDate { get; }
+        public DateTime CreateDate { get; private set; }
 
         public DateTime LastUpdate { get; set; }
 
