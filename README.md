@@ -1,6 +1,9 @@
 # companion-town
 HTTP API which could be used to power a simple virtual pet style game
 
+### Build
+[![Build Status](https://travis-ci.org/oandreeeee/companion-town.svg?branch=master)](https://travis-ci.org/oandreeeee/companion-town)
+
 ### Architecture options 
 * Use of [LiteDB](http://www.litedb.org/) in order to remove external dependencies
 * Repository pattern in order to easily change to other db engine
