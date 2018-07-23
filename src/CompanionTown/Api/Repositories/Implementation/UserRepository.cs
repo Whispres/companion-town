@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Api.Models;
@@ -83,6 +84,24 @@ namespace Api.Repositories.Implementation
                 Log.Error(ex, $"On {nameof(InsertAsync)}");
 
                 return Task.Run(() => false);
+            }
+        }
+
+        public Task<List<User>> GetAsync()
+        {
+            var result = new List<User>();
+
+            try
+            {
+                result = this.Database.FindAll().ToList();
+
+                return Task.Run(() => result);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"On {nameof(GetAsync)} list");
+
+                return null;
             }
         }
     }

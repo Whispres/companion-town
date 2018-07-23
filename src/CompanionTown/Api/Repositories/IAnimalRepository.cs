@@ -13,7 +13,7 @@ namespace Api.Repositories
 
         Task<Animal> GetAsync(Guid id);
 
-        Task<Animal> GetAsync(string id, string user);
+        Task<Animal> GetAsync(string identifier, string user);
 
         Task<List<Animal>> GetAsync(string user);
     }

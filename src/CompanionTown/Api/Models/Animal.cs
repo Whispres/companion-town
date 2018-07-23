@@ -1,4 +1,5 @@
 ﻿using System;
+using Api.Extensions;
 
 namespace Api.Models
 {
@@ -10,6 +11,8 @@ namespace Api.Models
 
         public Animal(string name, string user, AnimalType animalType, int defaultHappy = 1, int defaultHungry = 1)
         {
+            this.Name = name;
+            this.User = user;
             this.DefaultHappy = defaultHappy;
             this.DefaultHungry = defaultHungry;
             this.Type = animalType;
@@ -39,5 +42,13 @@ namespace Api.Models
         public AnimalType Type { get; set; }
 
         public bool Alive { get; set; } = true;
+
+        public string Identifier
+        {
+            get
+            {
+                return this.Name.RemoveSpecialCharacters();
+            }
+        }
     }
 }

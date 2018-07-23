@@ -41,7 +41,7 @@ namespace Api.Services.Implementation
                     throw new NotFoundException("User");
                 }
 
-                var animal = this.GenerateAnimal(animalModel, userName);
+                var animal = GenerateAnimal(animalModel, userName);
 
                 if (animal.Type == AnimalType.Undefined)
                 {
@@ -50,7 +50,7 @@ namespace Api.Services.Implementation
 
                 var animalsOfTheUser = await this._animalRepository.GetAsync(animal.User);
 
-                if (animalsOfTheUser.Any(_ => _.Name == animal.Name))
+                if (animalsOfTheUser.Any(_ => _.Identifier == animal.Identifier))
                 {
                     throw new NotModifiedException("Already exists");
                 }
@@ -80,6 +80,23 @@ namespace Api.Services.Implementation
             {
                 throw;
             }
+        }
+
+        public async Task<List<Animal>> GetAsync(string user)
+        {
+            var currentUser = await this._userRepository.GetAsync(user);
+
+            if (currentUser == null)
+            {
+                throw new NotFoundException("User");
+            }
+
+            return await this._animalRepository.GetAsync(user);
+        }
+
+        public async Task<Animal> GetAsync(string name, string user)
+        {
+            return await this._animalRepository.GetAsync(name, user);
         }
 
         public async Task<bool> PatchAnimalAsync(List<AnimalPatch> animalPatch, string userId, string animalId)
@@ -125,7 +142,7 @@ namespace Api.Services.Implementation
             }
         }
 
-        private Animal GenerateAnimal(AnimalPost animalViewModel, string userName)
+        private static Animal GenerateAnimal(AnimalPost animalViewModel, string userName)
         {
             switch (animalViewModel.Type)
             {

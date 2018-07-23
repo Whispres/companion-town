@@ -21,13 +21,62 @@ namespace Api.Controllers
             this._animalService = animalService;
         }
 
-        // POST api/user
+        [HttpGet("{name}")]
+        [ProducesResponseType(typeof(Animal), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult> GetAsync([FromRoute] string user, [FromRoute] string name)
+        {
+            try
+            {
+                var animal = await _animalService.GetAsync(name, user);
+
+                if (animal == null)
+                {
+                    return this.NotFound();
+                }
+
+                return this.Ok(animal);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(List<Animal>), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
+        public async Task<ActionResult> Get([FromRoute] string user)
+        {
+            try
+            {
+                var animals = await _animalService.GetAsync(user);
+
+                if (animals == null)
+                {
+                    return this.NotFound();
+                }
+
+                return this.Ok(animals);
+            }
+            catch (NotFoundException ex)
+            {
+                return this.NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(typeof(AnimalPost), 201)]
         [ProducesResponseType(typeof(string), 304)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 404)]
-        public ActionResult Post([FromRoute] string user, [FromBody] AnimalPost animal)
+        public async Task<ActionResult> PostAsync([FromRoute] string user, [FromBody] AnimalPost animal)
         {
             try
             {
@@ -41,7 +90,7 @@ namespace Api.Controllers
                     return this.BadRequest("Invalid");
                 }
 
-                this._animalService.CreateAnimalAsync(animal, user);
+                await this._animalService.CreateAnimalAsync(animal, user);
 
                 return this.Created($"/{animal.Name}", animal);
             }
@@ -59,13 +108,16 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
-                Log.Error(ex, $"{nameof(AnimalController)}-{nameof(Post)} fails");
+                Log.Error(ex, $"{nameof(AnimalController)}-{nameof(PostAsync)} fails");
 
                 return this.BadRequest(ex.Message);
             }
         }
-        
+
         [HttpPatch("{id}")]
+        [ProducesResponseType(typeof(bool), 200)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 404)]
         public async Task<ActionResult> PatchBook([FromRoute]string user, [FromRoute]string id, [FromBody] List<AnimalPatch> animalPatch)
         {
             try
@@ -94,6 +146,10 @@ namespace Api.Controllers
 
                     return this.BadRequest(errors);
                 }
+            }
+            catch (NotFoundException ex)
+            {
+                return this.NotFound(ex.Message);
             }
             catch (BadRequestException ex)
             {

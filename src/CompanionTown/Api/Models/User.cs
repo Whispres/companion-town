@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
+using Api.Extensions;
 
 namespace Api.Models
 {
@@ -16,13 +16,8 @@ namespace Api.Models
         {
             get
             {
-                return RemoveSpecialCharacters(this.Name);
+                return this.Name.RemoveSpecialCharacters();
             }
-        }
-
-        private static string RemoveSpecialCharacters(string str)
-        {
-            return Regex.Replace(str, "[^a-zA-Z0-9_.]+", "", RegexOptions.Compiled);
         }
     }
 }

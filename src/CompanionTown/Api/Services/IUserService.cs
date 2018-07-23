@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Api.Models;
 
 namespace Api.Services
@@ -7,7 +8,7 @@ namespace Api.Services
     {
         Task<User> CreateUserAsync(User user);
 
-        PagedResult<User> GetPaged(int page, int limit);
+        Task<List<User>> GetAsync();
 
         Task<User> GetAsync(string id);
     }

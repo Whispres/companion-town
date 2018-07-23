@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Api.Exceptions;
 using Api.Models;
@@ -44,13 +45,20 @@ namespace Api.Controllers
 
         // GET api/user
         [HttpGet]
-        [ProducesResponseType(typeof(PagedResult<User>), 200)]
+        [ProducesResponseType(typeof(List<Animal>), 200)]
         [ProducesResponseType(typeof(string), 400)]
-        public ActionResult Get([FromQuery] int page, int take)
+        public async Task<ActionResult> GetAsync()
         {
             try
             {
-                return this.Ok(_userService.GetPaged(page, take));
+                var users = await this._userService.GetAsync();
+
+                if (users == null)
+                {
+                    return this.NotFound();
+                }
+
+                return this.Ok(users);
             }
             catch (Exception ex)
             {

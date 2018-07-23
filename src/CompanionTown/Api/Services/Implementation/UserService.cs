@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Api.Exceptions;
 using Api.Models;
 using Api.Repositories;
@@ -30,9 +31,9 @@ namespace Api.Services.Implementation
             return user;
         }
 
-        public PagedResult<User> GetPaged(int page, int limit)
-        {
-            return this._userRepository.GetPaged(page, limit);
+        public async Task<List<User>> GetAsync()
+        { 
+            return await this._userRepository.GetAsync();
         }
 
         public async Task<User> GetAsync(string id)

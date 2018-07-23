@@ -30,7 +30,7 @@ namespace Api.Repositories.Implementation
             {
                 Log.Error(ex, $"On {nameof(GetAsync)} list");
 
-                return Task.Run(() => result);
+                return null;
             }
         }
 
@@ -50,11 +50,11 @@ namespace Api.Repositories.Implementation
             }
         }
 
-        public Task<Animal> GetAsync(string id, string user)
+        public Task<Animal> GetAsync(string identifier, string user)
         {
             try
             {
-                var result = this.Database.Find(_ => _.Name == id && _.User == user).FirstOrDefault();
+                var result = this.Database.Find(_ => _.Identifier == identifier && _.User == user).FirstOrDefault();
 
                 return Task.Run(() => result);
             }
