@@ -7,5 +7,7 @@
         public string UsersCollection { get; set; }
 
         public string AnimalsCollection { get; set; }
+
+        public string HangfireConnectionString { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace Api.Repositories.Implementation
             base(databaseOptions.Value.CompanionTownConnectionString, databaseOptions.Value.AnimalsCollection)
         {
         }
-        
+
         public Task<List<Animal>> GetAsync(string user)
         {
             var result = new List<Animal>();
@@ -39,6 +39,22 @@ namespace Api.Repositories.Implementation
             try
             {
                 var result = this.Database.Find(_ => _.Id == id).FirstOrDefault();
+
+                return Task.Run(() => result);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"On {nameof(InsertAsync)}");
+
+                return null;
+            }
+        }
+
+        public Task<Animal> GetAsync(string id, string user)
+        {
+            try
+            {
+                var result = this.Database.Find(_ => _.Name == id && _.User == user).FirstOrDefault();
 
                 return Task.Run(() => result);
             }

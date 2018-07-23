@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Api.Exceptions;
 using Api.Models;
 using Api.Services;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Api.Controllers
 {
@@ -19,11 +23,11 @@ namespace Api.Controllers
 
         // POST api/user
         [HttpPost]
-        [ProducesResponseType(typeof(AnimalViewModel), 201)]
+        [ProducesResponseType(typeof(AnimalPost), 201)]
         [ProducesResponseType(typeof(string), 304)]
         [ProducesResponseType(typeof(string), 400)]
         [ProducesResponseType(typeof(string), 404)]
-        public ActionResult Post([FromRoute] string user, [FromBody] AnimalViewModel animal)
+        public ActionResult Post([FromRoute] string user, [FromBody] AnimalPost animal)
         {
             try
             {
@@ -55,15 +59,50 @@ namespace Api.Controllers
             }
             catch (Exception ex)
             {
+                Log.Error(ex, $"{nameof(AnimalController)}-{nameof(Post)} fails");
+
                 return this.BadRequest(ex.Message);
             }
         }
-
-        // http://hamidmosalla.com/2018/04/14/asp-net-core-api-patch-method-without-using-jsonpatchdocument/
-        [HttpPatch("{id}", Name = "PatchAnimal")]
-        public IActionResult PatchBook([FromRoute]string user, [FromRoute]string id, [FromBody] AnimalPatch animalPatch)
+        
+        [HttpPatch("{id}")]
+        public async Task<ActionResult> PatchBook([FromRoute]string user, [FromRoute]string id, [FromBody] List<AnimalPatch> animalPatch)
         {
-            return NoContent();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(user))
+                {
+                    return this.BadRequest("Invalid user");
+                }
+
+                if (string.IsNullOrWhiteSpace(id))
+                {
+                    return this.BadRequest("Invalid animal");
+                }
+
+                if (ModelState.IsValid)
+                {
+                    var result = await this._animalService.PatchAnimalAsync(animalPatch, user, id);
+
+                    return this.Ok(result);
+                }
+                else
+                {
+                    var errors = ModelState.Select(x => x.Value.Errors)
+                        .Where(y => y.Count > 0)
+                        .ToList();
+
+                    return this.BadRequest(errors);
+                }
+            }
+            catch (BadRequestException ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return this.BadRequest(ex.Message);
+            }
         }
     }
 }

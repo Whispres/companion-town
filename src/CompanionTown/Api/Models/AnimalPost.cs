@@ -2,7 +2,7 @@
 
 namespace Api.Models
 {
-    public class AnimalViewModel
+    public class AnimalPost
     {
         [Required]
         [StringLength(100)]

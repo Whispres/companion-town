@@ -44,7 +44,7 @@ namespace Api
             services.AddTransient<IAnimalService, AnimalService>();
             services.AddTransient<IAnimalManagementService, AnimalManagementService>();
 
-            services.AddHangfire(t => t.UseLiteDbStorage("hangfire.db"));
+            services.AddHangfire(t => t.UseLiteDbStorage(Configuration.GetSection("Database")["HangfireConnectionString"]));
 
             services.AddSwaggerGen(c =>
             {

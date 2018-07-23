@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Api.Exceptions;
@@ -29,7 +30,7 @@ namespace Api.Services.Implementation
             this._animalManagementService = animalManagementService;
         }
 
-        public async Task<bool> CreateAnimalAsync(AnimalViewModel animalModel, string userName)
+        public async Task<bool> CreateAnimalAsync(AnimalPost animalModel, string userName)
         {
             try
             {
@@ -81,7 +82,50 @@ namespace Api.Services.Implementation
             }
         }
 
-        private Animal GenerateAnimal(AnimalViewModel animalViewModel, string userName)
+        public async Task<bool> PatchAnimalAsync(List<AnimalPatch> animalPatch, string userId, string animalId)
+        {
+            try
+            {
+                var user = await this._userRepository.GetAsync(userId);
+
+                if (user == null)
+                {
+                    throw new NotFoundException("User");
+                }
+
+                var animal = await this._animalRepository.GetAsync(animalId, userId);
+
+                if (animal == null)
+                {
+                    throw new NotFoundException("Animal");
+                }
+
+                foreach (var a in animalPatch)
+                {
+                    switch (a.Name)
+                    {
+                        case AnimalPatch.PropertyName.Hungry:
+                            animal.Hungry -= a.PropertyValue;
+                            break;
+
+                        case AnimalPatch.PropertyName.Happiness:
+                            animal.Hapiness += a.PropertyValue;
+                            break;
+
+                        default:
+                            throw new BadRequestException("Invalid property");
+                    }
+                }
+
+                return await this._animalRepository.UpdateAsync(animal);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private Animal GenerateAnimal(AnimalPost animalViewModel, string userName)
         {
             switch (animalViewModel.Type)
             {
