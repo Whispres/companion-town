@@ -11,4 +11,5 @@ HTTP API which could be used to power a simple virtual pet style game
 * Improve repository with lazy loading
 * Middleware to handler unxpected errors
 * Improve swagger documentation (ex.: add enums to endpoint)
+* Create a page result for `GET`'s
 
