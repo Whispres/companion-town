@@ -5,8 +5,8 @@ dotnet: 2.1
 branches:  
   only:
     - master
-install:
-- dotnet restore
 
 script:
- - dotnet build
+ - cd src/CompanionTown
+ - dotnet restore
+ - dotnet build -c Release
