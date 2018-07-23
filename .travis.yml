@@ -10,3 +10,4 @@ script:
  - cd src/CompanionTown
  - dotnet restore
  - dotnet build -c Release
+ - dotnet test Tests/Api.Tests/Api.Tests.csproj
