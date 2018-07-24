@@ -3,6 +3,7 @@ HTTP API which could be used to power a simple virtual pet style game
 
 ### Build
 Integration with TravisCI - runs build (Release) and run the tests
+
 [![Build Status](https://travis-ci.org/oandreeeee/companion-town.svg?branch=master)](https://travis-ci.org/oandreeeee/companion-town)
 
 ### Development options 
