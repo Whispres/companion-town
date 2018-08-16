@@ -22,6 +22,7 @@ Integration with TravisCI - runs build (Release) and run the tests
 * Create a pagination for `GET`'s
 * Separate objects (domain vs dto's vs view model)
 * Improve validations
+* !!REMOVE Hangfire and create a lazy loading approach (in gets and patchs)
 
 ### Unit Tests
 Made only over the `UserService` as example. Focus in cover all the corner cases instead of focus on the code coverage.

@@ -17,7 +17,7 @@ namespace Api.Services.Implementation
 
         public async Task<User> CreateUserAsync(User user)
         {
-            var existentUser = await this._userRepository.GetAsync(user.Name);
+            var existentUser = await this._userRepository.GetAsync(user.Identifier);
 
             if (existentUser != null)
             {

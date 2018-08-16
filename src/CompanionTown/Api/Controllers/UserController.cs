@@ -45,7 +45,7 @@ namespace Api.Controllers
 
         // GET api/user
         [HttpGet]
-        [ProducesResponseType(typeof(List<Animal>), 200)]
+        [ProducesResponseType(typeof(List<User>), 200)]
         [ProducesResponseType(typeof(string), 400)]
         public async Task<ActionResult> GetAsync()
         {

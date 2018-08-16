@@ -14,6 +14,7 @@ namespace Api.Models
         {
             Hungry = 1,
             Happiness = 2
+                
         }
     }
 }

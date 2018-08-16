@@ -44,11 +44,11 @@ namespace Api.Services.Implementation
             {
                 var animal = await this._animalRepository.GetAsync(id);
 
-                animal.Hungry += animal.DefaultHappy;
+                animal.Hungry += animal.DefaultHungry;
 
-                if (animal.Hapiness > 100)
+                if (animal.Hungry > 100)
                 {
-                    animal.Hapiness = 101;
+                    animal.Hungry = 101;
                     animal.Alive = false;
 
                     RecurringJob.RemoveIfExists($"HUNGRY-{id.ToString()}");
